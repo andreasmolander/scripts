@@ -1,6 +1,6 @@
 """ Print git repository versions
 
-This script will print the latest commit hash for each subdirectory in the current directory.
+This script will print the output of `git branch -vv` for each subdirectory in the current directory.
 It does not check whether the subdirectory is a git repository or not.
 
 It can be used for documenting the versions of the repositories in a project, e.g. before
@@ -16,16 +16,13 @@ def print_latest_commit(repo_dir):
         os.chdir(repo_dir)
         
         # Run the git log command to get the latest commit
-        result = subprocess.run(['git', 'log', '-1'], capture_output=True, text=True)
-
-        # Fetch only the commit hash
-        result.stdout = result.stdout.split('\n')[0]
+        result = subprocess.run(['git', 'branch', '-vv'], capture_output=True, text=True)
         
         # Check if the command was successful
         if result.returncode == 0:
-            print(f"Latest commit for {repo_dir}:\n{result.stdout}\n")
+            print(f"`git branch -vv` for {repo_dir}:\n{result.stdout}")
         else:
-            print(f"Failed to fetch latest commit for {repo_dir}:\n{result.stderr}")
+            print(f"Failed to run `git branch -vv` for {repo_dir}:\n{result.stderr}")
     except Exception as e:
         print(f"An error occurred for {repo_dir}: {e}")
 
